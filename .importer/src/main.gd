@@ -16,6 +16,7 @@ onready var viewport = $viewport
 
 var library_path
 var template_text
+var template_metal_text
 var quixel_mats
 
 signal next_material()
@@ -56,6 +57,10 @@ func load_template():
 	var file = File.new()
 	file.open("res://template.json", File.READ)
 	template_text = file.get_as_text()
+	file.close()
+	
+	file.open("res://template_metal.json", File.READ)
+	template_metal_text = file.get_as_text()
 	file.close()
 
 func _ready():
@@ -159,8 +164,37 @@ func get_image_texture(path: String):
 	tex.create_from_image(image)
 	return tex
 
+func get_average_color(path: = "") -> String:
+	var image = Image.new()
+	image.load(path)
+	image.lock()
+	var color_avg = Color.black
+	var sample_width = 10
+	var sample_height = 10
+	for x in range(sample_width):
+		for y in range(sample_height):
+			var color = image.get_pixel(x, y)
+			color_avg.r += color.r
+			color_avg.g += color.g
+			color_avg.b += color.b
+	color_avg.r /= sample_width * sample_height
+	color_avg.g /= sample_width * sample_height
+	color_avg.b /= sample_width * sample_height
+	image.unlock()
+#	print_log(str(color_avg))
+	return color_avg.to_html(false)
+
+func get_resolution_text(path: = "") -> String:
+	var image = Image.new()
+	image.load(path)
+	return str(image.get_width()) + "x" + str(image.get_height())
+
+func get_file_size(path: = "") -> String:
+	var file: = File.new()
+	return str(file.get_len())
+
 func process_material(dir_path: String, category: String):
-	var mat_name = dir_path.split("/")[-2]
+	var mat_name: = dir_path.split("/")[-2] as String
 	
 	var files = Utilities.list_all_files(dir_path)
 	print_log("Processing: " + dir_path)
@@ -202,6 +236,162 @@ func process_material(dir_path: String, category: String):
 			mat_data.metalness_path, 
 				file_template.replace("TEMPLATE", "Metalness"))
 	
+	var template = template_text
+	if mat_data.is_metal:
+		template = template_metal_text
+	var mat_id = mat_name.sha256_text()
+	
+	template = template.replace(
+		"QUIXEL_CATEGORY",
+		category.to_lower()
+	)
+	
+	template = template.replace(
+		"QUIXEL_MATERIAL_ID",
+		mat_id
+	)
+	
+	template = template.replace(
+		"QUIXEL_MATERIAL_NAME",
+		mat_name
+	)
+	
+	template = template.replace(
+		"QUIXEL_FILE_PREVIEW",
+		mat_name + "_Preview.png"
+	)
+	
+	template = template.replace(
+		"QUIXEL_DIFFUSE_AVERAGE_COLOR",
+		get_average_color(mat_data.diffuse_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_DIFFUSE_RESOLUTION",
+		get_resolution_text(mat_data.diffuse_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_DIFFUSE_FILE",
+		file_template.replace("TEMPLATE", "Diffuse")
+	)
+	
+	template = template.replace(
+		"QUIXEL_DIFFUSE_TYPE",
+		"image/jpeg"
+	)
+	
+	template = template.replace(
+		"QUIXEL_DIFFUSE_SIZE",
+		get_file_size(mat_data.diffuse_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_ROUGHNESS_AVERAGE_COLOR",
+		get_average_color(mat_data.roughness_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_ROUGHNESS_RESOLUTION",
+		get_resolution_text(mat_data.roughness_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_ROUGHNESS_FILE",
+		file_template.replace("TEMPLATE", "Roughness")
+	)
+	
+	template = template.replace(
+		"QUIXEL_ROUGHNESS_TYPE",
+		"image/jpeg"
+	)
+	
+	template = template.replace(
+		"QUIXEL_ROUGHNESS_SIZE",
+		get_file_size(mat_data.roughness_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_NORMAL_AVERAGE_COLOR",
+		get_average_color(mat_data.normal_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_NORMAL_RESOLUTION",
+		get_resolution_text(mat_data.normal_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_NORMAL_FILE",
+		file_template.replace("TEMPLATE", "Normal")
+	)
+	
+	template = template.replace(
+		"QUIXEL_NORMAL_TYPE",
+		"image/jpeg"
+	)
+	
+	template = template.replace(
+		"QUIXEL_NORMAL_SIZE",
+		get_file_size(mat_data.normal_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_DISPLACEMENT_AVERAGE_COLOR",
+		get_average_color(mat_data.displacement_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_DISPLACEMENT_RESOLUTION",
+		get_resolution_text(mat_data.displacement_path)
+	)
+	
+	template = template.replace(
+		"QUIXEL_DISPLACEMENT_FILE",
+		file_template.replace("TEMPLATE", "Displacement")
+	)
+	
+	template = template.replace(
+		"QUIXEL_DISPLACEMENT_TYPE",
+		"image/jpeg"
+	)
+	
+	template = template.replace(
+		"QUIXEL_DISPLACEMENT_SIZE",
+		get_file_size(mat_data.displacement_path)
+	)
+	
+	if mat_data.is_metal:
+		template = template.replace(
+			"QUIXEL_METALNESS_AVERAGE_COLOR",
+			get_average_color(mat_data.metalness_path)
+		)
+		
+		template = template.replace(
+			"QUIXEL_METALNESS_RESOLUTION",
+			get_resolution_text(mat_data.metalness_path)
+		)
+		
+		template = template.replace(
+			"QUIXEL_METALNESS_FILE",
+			file_template.replace("TEMPLATE", "Metalness")
+		)
+		
+		template = template.replace(
+			"QUIXEL_METALNESS_TYPE",
+			"image/jpeg"
+		)
+		
+		template = template.replace(
+			"QUIXEL_METALNESS_SIZE",
+			get_file_size(mat_data.metalness_path)
+		)
+	
+	var file = File.new()
+	file.open(get_quixel_material_path(mat_name) + mat_id + ".json", File.WRITE)
+	file.store_string(template)
+	file.close()
+	
 	print_log("Processing done: " + dir_path)
 	print_log()
 	yield(VisualServer, "frame_post_draw")
@@ -213,11 +403,11 @@ func import_pressed():
 	
 	var categories = Utilities.list_directories(get_folder_path())
 	
-#	quixel_mats = Utilities.list_directories(get_quixel_surface_path())
-#	print_log()
-#	print_log("Already imported:")
-#	for mat in quixel_mats:
-#		print_log(mat)
+	quixel_mats = Utilities.list_directories(get_quixel_surface_path())
+	print_log()
+	print_log("Already imported:")
+	for mat in quixel_mats:
+		print_log(mat)
 	
 	print_log()
 	for category in categories:
@@ -226,8 +416,8 @@ func import_pressed():
 		)
 		
 		for material in materials:
-#			if material in quixel_mats:
-#				continue
+			if material in quixel_mats:
+				continue
 			process_material(
 				get_folder_path() + category + "/" + material + "/", category
 			)
