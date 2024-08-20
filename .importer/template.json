@@ -1,0 +1,79 @@
+{
+  "id": "QUIXEL_MATERIAL_ID",
+  "name": "QUIXEL_MATERIAL_NAME",
+  "origin": "mixer-imported",
+  "categories": [
+    "surface",
+    "concrete",
+    "import"
+  ],
+  "tags": [],
+  "previews": {
+    "images": [
+      {
+        "uri": "QUIXEL_FILE_PREVIEW"
+      }
+    ]
+  },
+  "meta": [
+    {
+      "name": "Scan Area",
+      "key": "scanArea",
+      "value": "3x3 m"
+    },
+    {
+      "name": "tileable",
+      "key": "Tileable",
+      "value": true
+    }
+  ],
+  "averageColor": "#000000",
+  "version": 2,
+  "maps": [
+    {
+      "name": "Diffuse",
+      "type": "diffuse",
+      "colorSpace": null,
+      "averageColor": "QUIXEL_DIFFUSE_AVERAGE_COLOR",
+      "resolution": "QUIXEL_DIFFUSE_RESOLUTION",
+      "uri": "QUIXEL_DIFFUSE_FILE",
+      "mimeType": "QUIXEL_DIFFUSE_TYPE",
+      "bitDepth": 8,
+      "contentLength": QUIXEL_DIFFUSE_SIZE
+    },
+    {
+      "name": "Roughness",
+      "type": "roughness",
+      "colorSpace": null,
+      "averageColor": "QUIXEL_ROUGHNESS_AVERAGE_COLOR",
+      "resolution": "QUIXEL_ROUGHNESS_RESOLUTION",
+      "uri": "QUIXEL_ROUGHNESS_FILE",
+      "mimeType": "QUIXEL_ROUGHNESS_TYPE",
+      "bitDepth": 8,
+      "contentLength": QUIXEL_ROUGHNESS_SIZE
+    },
+    {
+      "name": "Normal",
+      "type": "normal",
+      "colorSpace": null,
+      "averageColor": "QUIXEL_NORMAL_AVERAGE_COLOR",
+      "resolution": "QUIXEL_NORMAL_RESOLUTION",
+      "uri": "QUIXEL_NORMAL_FILE",
+      "mimeType": "QUIXEL_NORMAL_TYPE",
+      "bitDepth": 8,
+      "contentLength": QUIXEL_NORMAL_SIZE
+    },
+    {
+      "name": "Displacement",
+      "type": "displacement",
+      "colorSpace": null,
+      "averageColor": "QUIXEL_DISPLACEMENT_AVERAGE_COLOR",
+      "heightMultiplier": 10.0,
+      "resolution": "QUIXEL_DISPLACEMENT_RESOLUTION",
+      "uri": "QUIXEL_DISPLACEMENT_FILE",
+      "mimeType": "QUIXEL_DISPLACEMENT_TYPE",
+      "bitDepth": 8,
+      "contentLength": QUIXEL_DISPLACEMENT_SIZE
+    }
+  ]
+}
